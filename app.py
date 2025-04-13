@@ -117,7 +117,7 @@ if uploaded_file and st.button("🚀 Ingest into database"):
         # st.json(extracted_jsons)
         st.session_state["extracted_jsons"] = extracted_jsons
         # Initialize the sentence transformer model
-        encoder = SentenceTransformer("all-MiniLM-L6-v2")
+        encoder = SentenceTransformer("all-MiniLM-L6-v2", device='cpu')
         # Prepare points to be uploaded
         points = []
         index = 0
@@ -181,7 +181,7 @@ else:
 
 try:
     # Initialize the sentence transformer model
-    encoder = SentenceTransformer("all-MiniLM-L6-v2")
+    encoder = SentenceTransformer("all-MiniLM-L6-v2", device='cpu')
     metadata_filter = Filter(
         should=[
             FieldCondition(
