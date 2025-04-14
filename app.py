@@ -208,16 +208,18 @@ try:
             query_filter=metadata_filter
         )
         st.success("Search executed successfully!")
+
+
+    # Collect context from retrieved hits
+    st.subheader("🤖 RAG - Passing Retrieved Data Chunks to LLM for Final Response")
+    
+    context = [hit.payload['text_data'] for hit in hits]
+    data_to_display = [hit.payload[selected_metadata_filter] for hit in hits]
+    st.markdown("Context")
+    st.text(data_to_display)
+
 except:
     st.error("Something went wrong with filtering !")
-
-# Collect context from retrieved hits
-st.subheader("🤖 RAG - Passing Retrieved Data Chunks to LLM for Final Response")
-
-context = [hit.payload['text_data'] for hit in hits]
-data_to_display = [hit.payload[selected_metadata_filter] for hit in hits]
-st.markdown("Context")
-st.text(data_to_display)
 
 # Construct the prompt
 prompt = f'''Based on the provided context information from the dataset, generate a comprehensive answer for the user query.
