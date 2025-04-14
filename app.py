@@ -182,19 +182,23 @@ else:
     st.info("📌 Please provide query to proceed.")
 
 try:
+    st.subtitle("Choose metadata filter you want to apply")
+    selected_metadata_filter = st.selectbox("Choose metadata filter", list(result.keys()))
+    selected_metadata_value = st.selectbox("Choose filter value", list(result.values()))
     # Initialize the sentence transformer model
     encoder = SentenceTransformer("all-MiniLM-L6-v2", device='cpu')
     metadata_filter = Filter(
         should=[
             FieldCondition(
-                key=list(result.keys())[0],
-                match={"value": list(result.values())[0]}
+                key=selected_metadata_filter,
+                match={"value": selected_metadata_value}
             )
         ]
     )
     st.markdown("### Metadata Filter")
     st.json(metadata_filter)
     query_vector = encoder.encode(user_query).tolist()
+    
     if metadata_filter:
         hits = client.search(
             collection_name=collection_name,
