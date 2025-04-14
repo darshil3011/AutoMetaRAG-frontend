@@ -171,17 +171,11 @@ st.subheader("🔍 Filter by Unique values")
 user_query = st.text_area("💬 Enter your search query", height=70)
 # --- Submit Button ---
 if st.button("filter by unique values"):
-    try:
         unique_values_per_key = st.session_state.get("extracted_jsons", {})
         result = filter_metadata_by_query(unique_values_per_key, user_query, api_key)
-        st.success("✅ Filtered metadata based on the query:")
+        st.success("✅ Suggested Metadata filters")
         st.json(result)
-    except Exception as e:
-        st.error(f"❌ Error: {e}")
-else:
-    st.info("📌 Please provide query to proceed.")
-
-
+    
 st.subheader("Choose metadata filter you want to apply")
 selected_metadata_filter = st.selectbox("Choose metadata filter", list(result.keys()))
 selected_metadata_value = st.selectbox("Choose filter value", list(result.values()))
