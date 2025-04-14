@@ -178,74 +178,74 @@ if st.button("filter by unique values"):
     st.success("✅ Suggested Metadata filters")
     st.json(result)
     
-    st.subheader("Choose metadata filter you want to apply")
-    # selected_metadata_filter = st.selectbox("Choose metadata filter", result_keys)
-    # selected_metadata_value = st.selectbox("Choose filter value", result_val)
+st.subheader("Choose metadata filter you want to apply")
+# selected_metadata_filter = st.selectbox("Choose metadata filter", result_keys)
+# selected_metadata_value = st.selectbox("Choose filter value", result_val)
 
-    st.selectbox("Select metadata field", result_keys, key="selected_metadata_filter")
-    if st.session_state.get("selected_metadata_filter"):
-        st.selectbox("Select value", result_val, key="selected_metadata_value")
+st.selectbox("Select metadata field", result_keys, key="selected_metadata_filter")
+if st.session_state.get("selected_metadata_filter"):
+    st.selectbox("Select value", result_val, key="selected_metadata_value")
 
 
-    if st.button("🚀 Extract context"):
-        # Initialize the sentence transformer model
-        try:
-            encoder = SentenceTransformer("all-MiniLM-L6-v2", device='cpu')
-            metadata_filter = Filter(
-                should=[
-                    FieldCondition(
-                        key=selected_metadata_filter,
-                        match={"value": selected_metadata_value}
-                    )
-                ]
-            )
-            st.markdown("### Metadata Filter")
-            st.json(metadata_filter)
-            query_vector = encoder.encode(user_query).tolist()
-            
-            if metadata_filter:
-                hits = client.search(
-                    collection_name=collection_name,
-                    query_vector=query_vector,
-                    limit=3,
-                    query_filter=metadata_filter
+if st.button("🚀 Extract context"):
+    # Initialize the sentence transformer model
+    try:
+        encoder = SentenceTransformer("all-MiniLM-L6-v2", device='cpu')
+        metadata_filter = Filter(
+            should=[
+                FieldCondition(
+                    key=selected_metadata_filter,
+                    match={"value": selected_metadata_value}
                 )
-                st.success("Search executed successfully!")
+            ]
+        )
+        st.markdown("### Metadata Filter")
+        st.json(metadata_filter)
+        query_vector = encoder.encode(user_query).tolist()
         
-        
-            # Collect context from retrieved hits
-            st.subheader("🤖 RAG - Passing Retrieved Data Chunks to LLM for Final Response")
-            
-            context = [hit.payload['text_data'] for hit in hits]
-            data_to_display = [hit.payload[selected_metadata_filter] for hit in hits]
-            st.markdown("Context")
-            st.text(data_to_display)
-        
-        except:
-            st.error("Something went wrong with filtering !")
-        
-        # Construct the prompt
-        prompt = f'''Based on the provided context information from the dataset, generate a comprehensive answer for the user query.
-        Context: {context}
-        User Query: {user_query}'''
-        
-        main_prompt = [
-            {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": prompt}
-        ]
-        
-        try:
-            # Make the request to OpenAI
-            client = openai.OpenAI(api_key=api_key)  # assuming key is collected earlier
-            response = client.chat.completions.create(
-                model="gpt-4o",
-                messages=main_prompt,
-                temperature=0
+        if metadata_filter:
+            hits = client.search(
+                collection_name=collection_name,
+                query_vector=query_vector,
+                limit=3,
+                query_filter=metadata_filter
             )
+            st.success("Search executed successfully!")
+    
+    
+        # Collect context from retrieved hits
+        st.subheader("🤖 RAG - Passing Retrieved Data Chunks to LLM for Final Response")
         
-            st.subheader("🧠 Final LLM Response")
-            st.markdown(response.choices[0].message.content)
-        
-        except Exception as e:
-            st.error(f"❌ Error calling OpenAI: {e}")
-        
+        context = [hit.payload['text_data'] for hit in hits]
+        data_to_display = [hit.payload[selected_metadata_filter] for hit in hits]
+        st.markdown("Context")
+        st.text(data_to_display)
+    
+    except:
+        st.error("Something went wrong with filtering !")
+    
+    # Construct the prompt
+    prompt = f'''Based on the provided context information from the dataset, generate a comprehensive answer for the user query.
+    Context: {context}
+    User Query: {user_query}'''
+    
+    main_prompt = [
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": prompt}
+    ]
+    
+    try:
+        # Make the request to OpenAI
+        client = openai.OpenAI(api_key=api_key)  # assuming key is collected earlier
+        response = client.chat.completions.create(
+            model="gpt-4o",
+            messages=main_prompt,
+            temperature=0
+        )
+    
+        st.subheader("🧠 Final LLM Response")
+        st.markdown(response.choices[0].message.content)
+    
+    except Exception as e:
+        st.error(f"❌ Error calling OpenAI: {e}")
+    
