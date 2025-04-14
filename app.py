@@ -190,6 +190,7 @@ if st.session_state.get("selected_metadata_filter"):
 
 
 if st.button("🚀 Extract context"):
+    st.markdown(selected_metadata_filter, selected_metadata_value)
     # Initialize the sentence transformer model
     try:
         encoder = SentenceTransformer("all-MiniLM-L6-v2", device='cpu')
