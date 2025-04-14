@@ -182,7 +182,7 @@ else:
     st.info("📌 Please provide query to proceed.")
 
 
-st.subtitle("Choose metadata filter you want to apply")
+st.subheader("Choose metadata filter you want to apply")
 selected_metadata_filter = st.selectbox("Choose metadata filter", list(result.keys()))
 selected_metadata_value = st.selectbox("Choose filter value", list(result.values()))
 # Initialize the sentence transformer model
