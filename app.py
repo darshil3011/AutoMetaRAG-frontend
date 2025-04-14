@@ -34,7 +34,7 @@ os.makedirs("data", exist_ok=True)
 st.markdown("Upload a `config.ini` to extract metadata")
 
 # --- Upload config.ini ---
-st.header("📄 Upload config.ini")
+st.header("📄 Extract Metadata Schema")
 uploaded_file = st.file_uploader("Upload config.ini", type="ini")
 
 if uploaded_file and st.button("get metadata schema"):
