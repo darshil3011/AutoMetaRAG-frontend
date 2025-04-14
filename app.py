@@ -173,12 +173,14 @@ user_query = st.text_area("💬 Enter your search query", height=70)
 if st.button("filter by unique values"):
     unique_values_per_key = st.session_state.get("extracted_jsons", {})
     result = filter_metadata_by_query(unique_values_per_key, user_query, api_key)
-    result_keys = list(result.keys())
-    result_val = list(result.values())
+    st.session_state["filter_result"] = result
     st.success("✅ Suggested Metadata filters")
     st.json(result)
     
 st.subheader("Choose metadata filter you want to apply")
+result = st.session_state['filter_result']
+result_keys = list(result.keys())
+result_val = list(result.values())
 # selected_metadata_filter = st.selectbox("Choose metadata filter", result_keys)
 # selected_metadata_value = st.selectbox("Choose filter value", result_val)
 
