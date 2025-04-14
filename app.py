@@ -181,11 +181,12 @@ if st.button("filter by unique values"):
 else:
     st.info("📌 Please provide query to proceed.")
 
+
+st.subtitle("Choose metadata filter you want to apply")
+selected_metadata_filter = st.selectbox("Choose metadata filter", list(result.keys()))
+selected_metadata_value = st.selectbox("Choose filter value", list(result.values()))
+# Initialize the sentence transformer model
 try:
-    st.subtitle("Choose metadata filter you want to apply")
-    selected_metadata_filter = st.selectbox("Choose metadata filter", list(result.keys()))
-    selected_metadata_value = st.selectbox("Choose filter value", list(result.values()))
-    # Initialize the sentence transformer model
     encoder = SentenceTransformer("all-MiniLM-L6-v2", device='cpu')
     metadata_filter = Filter(
         should=[
@@ -207,40 +208,38 @@ try:
             query_filter=metadata_filter
         )
         st.success("Search executed successfully!")
+except:
+    st.error("Something went wrong with filtering !")
 
-    # Collect context from retrieved hits
-    st.subheader("🤖 RAG - Passing Retrieved Data Chunks to LLM for Final Response")
+# Collect context from retrieved hits
+st.subheader("🤖 RAG - Passing Retrieved Data Chunks to LLM for Final Response")
 
-    context = [hit.payload['text_data'] for hit in hits]
-    # st.markdown("###Context")
-    # st.text(context)
+context = [hit.payload['text_data'] for hit in hits]
+# st.markdown("###Context")
+# st.text(context)
 
-    # Construct the prompt
-    prompt = f'''Based on the provided context information from the dataset, generate a comprehensive answer for the user query.
-    Context: {context}
-    User Query: {user_query}'''
+# Construct the prompt
+prompt = f'''Based on the provided context information from the dataset, generate a comprehensive answer for the user query.
+Context: {context}
+User Query: {user_query}'''
 
-    main_prompt = [
-        {"role": "system", "content": "You are a helpful assistant."},
-        {"role": "user", "content": prompt}
-    ]
+main_prompt = [
+    {"role": "system", "content": "You are a helpful assistant."},
+    {"role": "user", "content": prompt}
+]
 
-    try:
-        # Make the request to OpenAI
-        client = openai.OpenAI(api_key=api_key)  # assuming key is collected earlier
-        response = client.chat.completions.create(
-            model="gpt-4o",
-            messages=main_prompt,
-            temperature=0
-        )
+try:
+    # Make the request to OpenAI
+    client = openai.OpenAI(api_key=api_key)  # assuming key is collected earlier
+    response = client.chat.completions.create(
+        model="gpt-4o",
+        messages=main_prompt,
+        temperature=0
+    )
 
-        st.subheader("🧠 Final LLM Response")
-        st.markdown(response.choices[0].message.content)
-
-    except Exception as e:
-        st.error(f"❌ Error calling OpenAI: {e}")
-
+    st.subheader("🧠 Final LLM Response")
+    st.markdown(response.choices[0].message.content)
 
 except Exception as e:
-    st.error(f"❌ Error while searching Qdrant: {e}")
+    st.error(f"❌ Error calling OpenAI: {e}")
 
