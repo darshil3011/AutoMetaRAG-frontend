@@ -176,7 +176,8 @@ def filter_metadata_by_query(unique_values_json, user_query, openai_api_key):
 
     prompt = ''' You will be given a query and master data JSON. The query is to be used for performing hybrid search on a vector database.
     Your job is to analyse the query and respond with key-value pairs that you can find out from the master data JSON. Don't focus on answering
-    the query. Just find out which key-value pairs match the master data.
+    the query. Just find out which key-value pairs match the master data. Just provide one or two key-value pairs that can be best to filter the 
+    large dataset we have.
 
     For example: Master json is {'price' : ['0$-100$', '100$-500$', '500$-1000$', '1000$+'], 'product_category': ['clothes, accessories', 'mobiles, laptops', 'grocery, essentials']}
 
