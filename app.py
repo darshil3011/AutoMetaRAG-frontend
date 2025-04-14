@@ -182,6 +182,12 @@ if st.button("filter by unique values"):
     selected_metadata_filter = st.selectbox("Choose metadata filter", result_keys)
     selected_metadata_value = st.selectbox("Choose filter value", result_val)
 
+    st.selectbox("Select metadata field", result_keys, key="selected_metadata_filter")
+
+    if st.session_state.get("selected_metadata_filter"):
+        st.selectbox("Select value", result_val, key="selected_metadata_value")
+
+
     if st.button("🚀 Extract context"):
         # Initialize the sentence transformer model
         try:
