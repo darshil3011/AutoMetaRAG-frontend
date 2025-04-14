@@ -204,7 +204,7 @@ try:
         hits = client.search(
             collection_name=collection_name,
             query_vector=query_vector,
-            limit=5,
+            limit=3,
             query_filter=metadata_filter
         )
         st.success("Search executed successfully!")
@@ -215,8 +215,9 @@ except:
 st.subheader("🤖 RAG - Passing Retrieved Data Chunks to LLM for Final Response")
 
 context = [hit.payload['text_data'] for hit in hits]
-# st.markdown("###Context")
-# st.text(context)
+data_to_display = [hit.payload[selected_metadata_filter] for hit in hits]
+st.markdown("Context")
+st.text(data_to_display)
 
 # Construct the prompt
 prompt = f'''Based on the provided context information from the dataset, generate a comprehensive answer for the user query.
