@@ -179,11 +179,10 @@ if st.button("filter by unique values"):
     st.json(result)
     
     st.subheader("Choose metadata filter you want to apply")
-    selected_metadata_filter = st.selectbox("Choose metadata filter", result_keys)
-    selected_metadata_value = st.selectbox("Choose filter value", result_val)
+    # selected_metadata_filter = st.selectbox("Choose metadata filter", result_keys)
+    # selected_metadata_value = st.selectbox("Choose filter value", result_val)
 
     st.selectbox("Select metadata field", result_keys, key="selected_metadata_filter")
-
     if st.session_state.get("selected_metadata_filter"):
         st.selectbox("Select value", result_val, key="selected_metadata_value")
 
