@@ -21,6 +21,8 @@ if "extracted_jsons" not in st.session_state:
 if "documents" not in st.session_state:
     st.session_state.documents = None
 
+# st.title("🔍 AutoMeta RAG")
+
 # UI to accept OpenAI API Key
 st.subheader("🔐 OpenAI Configuration")
 openai_api_key = st.text_input("Enter your OpenAI API Key", type="password")
