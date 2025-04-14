@@ -21,6 +21,9 @@ if "extracted_jsons" not in st.session_state:
 if "documents" not in st.session_state:
     st.session_state.documents = None
 
+if "filter_result" not in st.session_state:
+    st.session_state.filter_result = None
+
 st.title("🔍 AutoMeta RAG")
 
 # UI to accept OpenAI API Key
